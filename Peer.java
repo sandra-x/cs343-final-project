@@ -34,12 +34,12 @@ class Peer implements PeerRemote
        System.err.println("Current Highest ID: " + highID);
 
        if (highID > this.myID){
-         System.err.println("My ID " + this.myID + "is NOT higher. Pass on ID " + highID);
+         System.err.println("My ID " + this.myID + " is NOT higher. Pass on ID " + highID + " to " + this.successor);
          Registry registry = LocateRegistry.getRegistry(this.successorIP); //get registry of the IP of neighbor
          PeerRemote stubN = (PeerRemote) registry.lookup("peer");
          stubN.election(highID);
        } else if (this.myID > highID){
-         System.err.println("My ID "+ this.myID +" is higher! Pass it on.");
+         System.err.println("My ID "+ this.myID +" is higher! Pass it on to " + this.successor);
          Registry registry = LocateRegistry.getRegistry(this.successorIP); //get registry of the IP of neighbor
          PeerRemote stubN = (PeerRemote) registry.lookup("peer");
          stubN.election(this.myID);
@@ -62,7 +62,7 @@ class Peer implements PeerRemote
    public void leader(int highestID){
      try{
        this.leaderID = highestID;
-       System.err.println("Hey! The elected leader with the highest ID is " + highestID);
+       System.err.println("Hey! The elected leader with the highest ID is " + highestID + " Pass message to " + this.successor);
        if (this.myID != highestID){
          Registry registry = LocateRegistry.getRegistry(this.successorIP); //put ip
          PeerRemote stubBack = (PeerRemote) registry.lookup("peer");
