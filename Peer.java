@@ -24,7 +24,7 @@ class Peer implements PeerRemote
       this.successor = neighbor;
       this.successorIP = neighborIP;
 
-      this.leaderID = null;
+      this.leaderID = 0;
    }
 
    /* Hi
