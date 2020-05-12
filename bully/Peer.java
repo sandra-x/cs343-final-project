@@ -53,6 +53,7 @@ class Peer implements PeerRemote {
             if (entry.getKey() > myID) {
                 try{
                     System.out.println("sending election to process " + entry.getKey()); // do username later
+                    System.out.println("neighbor ip: " + this.neighborIPs.get(entry.getValue()));
                     Registry registry = LocateRegistry.getRegistry(this.neighborIPs.get(entry.getValue())); //get registry of the IP of neighbor
                     PeerRemote sendTo = (PeerRemote) registry.lookup("peer");
                     sendTo.election(this.ID);
