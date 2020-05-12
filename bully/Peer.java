@@ -19,10 +19,11 @@ class Peer implements PeerRemote {
         private static final long serialVersionUID = 1L; //?? vscode made me do this
 
         {
-        put(1, "172.31.42.207");
-        put(2, "172.31.88.123");
-        put(3, "172.31.80.206");
-        put(7, "123.21.24.214"); //failed process
+        put(1, "172.31.88.70");
+        put(2, "172.31.91.28");
+        put(3, "172.31.81.87");
+        put(4, "172.31.89.166");
+        // put(7, "123.21.24.214"); //failed process
 
     }};
 
@@ -33,9 +34,9 @@ class Peer implements PeerRemote {
         put("B", 2);
         put("C", 3);
         put("D", 4);
-        put("E", 5);
-        put("F", 6);
-        put("G", 7); // failed process
+        // put("E", 5);
+        // put("F", 6);
+        // put("G", 7); // failed process
     }};
 
 
