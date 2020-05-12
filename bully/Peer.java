@@ -15,28 +15,32 @@ class Peer implements PeerRemote {
     private boolean receivedOK = false;
     public int waitTimeSeconds = 5;
 
+    // process ids and ips
     private HashMap<Integer, String> neighborIPs = new HashMap<Integer, String>(){
         private static final long serialVersionUID = 1L; //?? vscode made me do this
 
         {
-        put(1, "172.31.88.70");
+        put(7, "172.31.88.70");
         put(2, "172.31.91.28");
-        put(3, "172.31.81.87");
-        put(4, "172.31.89.166");
-        // put(7, "123.21.24.214"); //failed process
+        put(5, "172.31.81.87");
+        put(8, "172.31.89.166");
+        put(6, "172.31.87.81");
+
+        put(11, "0.0.0.0"); //failed process
 
     }};
 
+    // process usernames and ids
     private HashMap<String, Integer> neighborIDs = new HashMap<String, Integer>(){
         private static final long serialVersionUID = 1L;
         {
-        put("A", 1);
+        put("A", 7);
         put("B", 2);
-        put("C", 3);
-        put("D", 4);
-        // put("E", 5);
+        put("C", 5);
+        put("D", 8);
+        put("E", 6);
         // put("F", 6);
-        // put("G", 7); // failed process
+        put("G", 11); // failed process
     }};
 
 
@@ -72,7 +76,7 @@ class Peer implements PeerRemote {
                     if (entry.getKey() > myID) {
                         try{
                             System.out.println("sending leaader to process " + entry.getKey()); // do username later
-                            Registry registry = LocateRegistry.getRegistry(this.neighborIPs.get(entry.getValue())); //get registry of the IP of neighbor
+                            Registry registry = LocateRegistry.getRegistry(entry.getValue()); //get registry of the IP of neighbor
                             PeerRemote sendTo = (PeerRemote) registry.lookup("peer");
                             sendTo.leader(this.ID);
                         } catch (Exception e) {
