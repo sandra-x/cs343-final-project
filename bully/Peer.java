@@ -14,38 +14,37 @@ class Peer implements PeerRemote {
     public int leaderID;
     private boolean receivedOK = false;
     private boolean receivedLeader = false;
-    public int waitTimeSeconds = 4;
+    public int waitTimeSeconds = 3;
+    private int numMessages;
 
     // process ids and ips
     private HashMap<Integer, String> neighborIPs = new HashMap<Integer, String>(){
         private static final long serialVersionUID = 1L; //?? vscode made me do this
         {
-        put(7, "172.31.85.216");
-        put(2, "172.31.85.48");
-        put(5, "172.31.45.218");
-        put(8, "172.31.34.69");
-        put(6, "172.31.36.251");
+            put(7, "172.31.85.216");
+            put(2, "172.31.85.48");
+            put(5, "172.31.45.218");
+            put(8, "172.31.34.69");
+            put(6, "172.31.36.251");
 
-        put(11, "110.10.10.01"); //failed process
-
+            put(11, "110.10.10.01"); //failed process
     }};
 
     // process usernames and ids
     private HashMap<String, Integer> neighborIDs = new HashMap<String, Integer>(){
         private static final long serialVersionUID = 1L;
         {
-        put("A", 7);
-        put("B", 2);
-        put("C", 5);
-        put("D", 8);
-        put("E", 6);
-        // put("F", 6);
-        put("G", 11); // failed process
+            put("A", 7);
+            put("B", 2);
+            put("C", 5);
+            put("D", 8);
+            put("E", 6);
+            // put("F", 6);
+            put("G", 11); // failed process
     }};
 
 
     public Peer (String username) {
-
         this.username = username;
         // this.ID = int(this.username);
         this.ID = this.neighborIDs.get(this.username);
@@ -54,10 +53,11 @@ class Peer implements PeerRemote {
     // send election message to all neighbors with higher ID
     private void sendElection(int myID) {
         for (Map.Entry<Integer, String> entry: this.neighborIPs.entrySet()) {
-            if (!receivedLeader) {
+            if (!this.receivedLeader) {
                 if (entry.getKey() > myID) {
                     try{
                         System.out.println("sending election to process " + entry.getKey()); // do username later
+                        this.numMessages+=1;
                         Registry registry = LocateRegistry.getRegistry(entry.getValue()); //get registry of the IP of neighbor
                         PeerRemote sendTo = (PeerRemote) registry.lookup("peer");
                         sendTo.election(this.ID);
@@ -78,6 +78,7 @@ class Peer implements PeerRemote {
                     if (entry.getKey() < myID) {
                         try{
                             System.out.println("sending leaader to process " + entry.getKey()); // do username later
+                            this.numMessages+=1;
                             Registry registry = LocateRegistry.getRegistry(entry.getValue()); //get registry of the IP of neighbor
                             PeerRemote sendTo = (PeerRemote) registry.lookup("peer");
                             sendTo.leader(this.ID);
@@ -87,6 +88,7 @@ class Peer implements PeerRemote {
                         }
                     }
                 }
+                finish();
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -96,14 +98,15 @@ class Peer implements PeerRemote {
     // receive an election message, 
     public void election(int senderID) {
         try {
-            //Immediately sends Coordinator message if it is the process with highest ID
+            //Immediately sends Coordinator message if it is the process with highest ID do later
 
             System.out.println("received election message from process " + senderID);
             //check if current peer ID is greater than senderID. if it is, send an OK message back
             if (this.ID > senderID){
                 Registry registry = LocateRegistry.getRegistry(this.neighborIPs.get(senderID)); //get registry of the IP of neighbor
                 PeerRemote sender = (PeerRemote) registry.lookup("peer");
-                sender.ok(this.ID);
+                sender.ok(this.ID); // sent ok message
+                this.numMessages+=1;
                 sendElection(this.ID);          
             }
      
@@ -126,10 +129,16 @@ class Peer implements PeerRemote {
         //this.leader = this.neighborIDs.
 
         System.out.println( " is the new leader with Id " + this.leaderID);
+        finish();    
+    }
+
+    // finish leader election
+    private void finish() {
+        System.out.println("finished");
+        System.out.println("number of messages sent: " + numMessages);
     }
 
     public static void main(String[] args) {
-
         try{
             Scanner scan = new Scanner(System.in);
             String username = scan.nextLine();
@@ -151,12 +160,10 @@ class Peer implements PeerRemote {
                 }
             }       
             scan.close();
-            System.out.println("finished");
 
         } catch(Exception e) {
             System.err.println("Peer exception: " + e.toString());
             e.printStackTrace();
         }
     }
-
 }
