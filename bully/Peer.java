@@ -13,17 +13,17 @@ class Peer implements PeerRemote {
     public String leader;
     public int leaderID;
     private boolean receivedOK = false;
-    public int waitTimeSeconds = 5;
+    public int waitTimeSeconds = 4;
 
     // process ids and ips
     private HashMap<Integer, String> neighborIPs = new HashMap<Integer, String>(){
         private static final long serialVersionUID = 1L; //?? vscode made me do this
         {
-        put(7, "172.31.88.70");
-        put(2, "172.31.91.28");
-        put(5, "172.31.81.87");
-        put(8, "172.31.89.166");
-        put(6, "172.31.87.81");
+        put(7, "172.31.85.216");
+        put(2, "172.31.85.48");
+        put(5, "172.31.45.218");
+        put(8, "172.31.34.69");
+        put(6, "172.31.36.251");
 
         put(11, "110.10.10.01"); //failed process
 
