@@ -18,7 +18,6 @@ class Peer implements PeerRemote {
     // process ids and ips
     private HashMap<Integer, String> neighborIPs = new HashMap<Integer, String>(){
         private static final long serialVersionUID = 1L; //?? vscode made me do this
-
         {
         put(7, "172.31.88.70");
         put(2, "172.31.91.28");
@@ -26,7 +25,7 @@ class Peer implements PeerRemote {
         put(8, "172.31.89.166");
         put(6, "172.31.87.81");
 
-        put(11, "0.0.0.0"); //failed process
+        put(11, "110.10.10.01"); //failed process
 
     }};
 
@@ -73,7 +72,7 @@ class Peer implements PeerRemote {
                 System.out.println("I am the new leader");
                 // send leader message to all peers with higher ID
                 for (Map.Entry<Integer, String> entry: this.neighborIPs.entrySet()) {
-                    if (entry.getKey() > myID) {
+                    if (entry.getKey() < myID) {
                         try{
                             System.out.println("sending leaader to process " + entry.getKey()); // do username later
                             Registry registry = LocateRegistry.getRegistry(entry.getValue()); //get registry of the IP of neighbor
