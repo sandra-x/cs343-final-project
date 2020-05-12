@@ -19,12 +19,12 @@ class Peer implements PeerRemote {
         {
         put(1, "172.31.42.207");
         put(2, "172.31.88.123");
-        
+
         put(7, "123.21.24.214"); //failed process
 
     }};
 
-    private HashMap<String, Integer> neighborIDs = new HashMap<>(){
+    private HashMap<String, Integer> neighborIDs = new HashMap<String, Integer>(){
         private static final long serialVersionUID = 1L;
         {
         put("A", 1);
