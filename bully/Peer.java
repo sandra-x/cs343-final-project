@@ -1,10 +1,13 @@
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.io.FileInputStream;
 import java.lang.Thread;
+import java.util.stream.*;
 
 class Peer implements PeerRemote {
 
@@ -18,7 +21,7 @@ class Peer implements PeerRemote {
     private int numMessages;
 
     // process ids and ips
-    private HashMap<Integer, String> neighborIPs = new HashMap<Integer, String>(){
+    private ConcurrentHashMap<Integer, String> neighborIPs = new ConcurrentHashMap<Integer, String>(){
         private static final long serialVersionUID = 1L; //?? vscode made me do this
         {
             put(7, "172.31.85.216");
@@ -31,7 +34,7 @@ class Peer implements PeerRemote {
     }};
 
     // process usernames and ids
-    private HashMap<String, Integer> neighborIDs = new HashMap<String, Integer>(){
+    private ConcurrentHashMap<String, Integer> neighborIDs = new ConcurrentHashMap<String, Integer>(){
         private static final long serialVersionUID = 1L;
         {
             put("A", 7);
@@ -53,6 +56,9 @@ class Peer implements PeerRemote {
     // send election message to all neighbors with higher ID
     private void sendElection(int myID) {
         for (Map.Entry<Integer, String> entry: this.neighborIPs.entrySet()) {
+        // IntStream.range(0,neighborIPs.size()).parallel().forEach(i -> {
+
+        // });
             if (!this.receivedLeader) {
                 if (entry.getKey() > myID) {
                     try{
