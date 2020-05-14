@@ -33,24 +33,23 @@ class Peer implements PeerRemote {
             put(11, "110.10.10.01"); //failed process
     }};
 
-    // process usernames and ids
-    private ConcurrentHashMap<String, Integer> neighborIDs = new ConcurrentHashMap<String, Integer>(){
-        private static final long serialVersionUID = 1L;
-        {
-            put("A", 7);
-            put("B", 2);
-            put("C", 5);
-            put("D", 8);
-            put("E", 6);
-            put("F", 3);
-            put("G", 11); // failed process
-    }};
-
 
     public Peer (String username) {
         this.username = username;
-        // this.ID = int(this.username);
-        this.ID = this.neighborIDs.get(this.username);
+         // process usernames and ids
+        ConcurrentHashMap<String, Integer> neighborIDs = new ConcurrentHashMap<String, Integer>() {
+            private static final long serialVersionUID = 1L;
+            {
+                put("A", 7);
+                put("B", 2);
+                put("C", 5);
+                put("D", 8);
+                put("E", 6);
+                put("F", 3);
+                put("G", 11); // failed process
+        }};
+
+        this.ID = neighborIDs.get(this.username);
     }
 
     // send election message to all neighbors with higher ID
@@ -87,7 +86,7 @@ class Peer implements PeerRemote {
                             this.numMessages+=1;
                             Registry registry = LocateRegistry.getRegistry(entry.getValue()); //get registry of the IP of neighbor
                             PeerRemote sendTo = (PeerRemote) registry.lookup("peer");
-                            sendTo.leader(this.ID);
+                            sendTo.leader(this.ID, this.username);
                         } catch (Exception e) {
                             System.err.println("Election message exception:" + e.toString());
                             e.printStackTrace();
@@ -128,12 +127,12 @@ class Peer implements PeerRemote {
     }
 
     // receive message from new leader
-    public void leader(int leaderID) {
+    public void leader(int leaderID, String leaderUser) {
         this.leaderID = leaderID;
         this.receivedLeader = true;
         //this.leader = this.neighborIDs.
 
-        System.out.println( " is the new leader with Id " + this.leaderID);
+        System.out.println(leaderUser + " is the new leader with Id " + this.leaderID);
         finish();    
     }
 

@@ -4,5 +4,5 @@ import java.rmi.RemoteException;
 public interface PeerRemote extends Remote{
     public void election(int senderID) throws RemoteException;
     public void ok(int senderID) throws RemoteException;
-    public void leader(int leaderID) throws RemoteException;
+    public void leader(int leaderID, String leaderUser) throws RemoteException;
 }
