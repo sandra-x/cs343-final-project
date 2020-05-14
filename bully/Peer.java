@@ -29,7 +29,7 @@ class Peer implements PeerRemote {
             put(5, "172.31.82.191");
             put(8, "172.31.89.34");
             put(6, "172.31.88.241");
-
+            put(3, "172.31.80.82");
             put(11, "110.10.10.01"); //failed process
     }};
 
@@ -42,7 +42,7 @@ class Peer implements PeerRemote {
             put("C", 5);
             put("D", 8);
             put("E", 6);
-            // put("F", 6);
+            put("F", 3);
             put("G", 11); // failed process
     }};
 
@@ -75,7 +75,7 @@ class Peer implements PeerRemote {
             }
         }
         try{
-            Thread.sleep(waitTimeSeconds*1000);
+            Thread.sleep(waitTimeSeconds*100);
             // if haven't received ok message, current peer is the new leader
             if (!this.receivedOK) {
                 System.out.println("I am the new leader");
@@ -112,10 +112,9 @@ class Peer implements PeerRemote {
                 Registry registry = LocateRegistry.getRegistry(this.neighborIPs.get(senderID)); //get registry of the IP of neighbor
                 PeerRemote sender = (PeerRemote) registry.lookup("peer");
                 sender.ok(this.ID); // sent ok message
-                this.numMessages+=1;
+                //this.numMessages+=1;
                 sendElection(this.ID);          
-            }
-     
+            }   
         } catch (Exception e){
             System.err.println("Election message exception:" + e.toString());
             e.printStackTrace();
